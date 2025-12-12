@@ -347,19 +347,25 @@ export default function Home() {
 
                   {/* Review Text */}
                   <p className="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed text-xs relative z-10">
-                    "Absolutely amazing experience! Gido Photography captured every precious moment of our wedding beautifully. The photos and videos exceeded our expectations. Highly professional and creative team!"
+                    "Gido!! Gido!! I'm alive!!..!
+Where do I even start? From our lateness to the pre-wedding shot, to your drip for the traditional and your steeze for the wedding!! My oh my! ! remember telling my sister and the glam team that if you do not go ahead with the shoot, I won't be surprised because we were fashionably late, but no way.
+You were ever so calm, bubbly, and receptive. Right there, I was so certain I got the right man. Director 1, thank you for pulling up for us in several ways, God bless you. You and your team will go far, Kojo, and I know this because of how you value people and not just your work, which is outstanding. Cheers to more gigs and kokotii vibes.Thank you, Kwame, for blinding me all the time too.
+I thought you were my favourite one on the team until I met baby police.
+⁠Such a humble soul. You have an incredible team, and you all are what a couple need on their day. Let's set a fufu date asap aloo, you're not alive?
+Lots of love,
+"
                   </p>
 
                   {/* Client Info */}
                   <div className="flex items-center gap-2 pt-3 border-t border-gray-200/50 dark:border-gray-700/50">
                     <div className="relative">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center text-white font-semibold text-xs shadow-sm">
-                        AK
+                        TE
                       </div>
                       <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white dark:border-gray-900"></div>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-black dark:text-white text-xs">Ama & Kwame</h4>
+                      <h4 className="font-semibold text-black dark:text-white text-xs">Tee & Ernest</h4>
                       <p className="text-[10px] text-gray-500 dark:text-gray-400">Wedding Clients</p>
                     </div>
                   </div>
@@ -368,9 +374,9 @@ export default function Home() {
             </ScrollAnimation>
 
             {/* Review 2 */}
-            <ScrollAnimation animationType="fade-up" delay={200}>
+            {/* <ScrollAnimation animationType="fade-up" delay={200}>
               <div className="relative bg-gradient-to-br from-pink-50/50 via-red-50/30 to-orange-50/50 dark:from-gray-900/50 dark:via-gray-800/50 dark:to-gray-900/50 backdrop-blur-xl rounded-xl p-3 md:p-4 border border-white/20 dark:border-gray-700/50 shadow-md">
-                {/* Quote Icon */}
+            
                 <div className="absolute top-3 right-3 opacity-10">
                   <svg className="w-8 h-8 text-pink-500" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.996 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.984zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.432.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
@@ -378,7 +384,7 @@ export default function Home() {
                 </div>
 
                 <div className="relative z-10">
-                  {/* Stars */}
+        
                   <div className="flex items-center gap-0.5 mb-2">
                     {[...Array(5)].map((_, i) => (
                       <svg key={i} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
@@ -387,12 +393,11 @@ export default function Home() {
                     ))}
                   </div>
 
-                  {/* Review Text */}
                   <p className="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed text-xs relative z-10">
                     "The studio session was incredible! The team made us feel so comfortable and the final photos were stunning. Professional, friendly, and delivered exactly what we wanted. Thank you!"
                   </p>
 
-                  {/* Client Info */}
+       
                   <div className="flex items-center gap-2 pt-3 border-t border-gray-200/50 dark:border-gray-700/50">
                     <div className="relative">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-r from-pink-400 to-red-500 flex items-center justify-center text-white font-semibold text-xs shadow-sm">
@@ -407,12 +412,12 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            </ScrollAnimation>
+            </ScrollAnimation> */}
 
             {/* Review 3 */}
-            <ScrollAnimation animationType="fade-up" delay={400}>
+            {/* <ScrollAnimation animationType="fade-up" delay={400}>
               <div className="relative bg-gradient-to-br from-purple-50/50 via-indigo-50/30 to-blue-50/50 dark:from-gray-900/50 dark:via-gray-800/50 dark:to-gray-900/50 backdrop-blur-xl rounded-xl p-3 md:p-4 border border-white/20 dark:border-gray-700/50 shadow-md">
-                {/* Quote Icon */}
+   
                 <div className="absolute top-3 right-3 opacity-10">
                   <svg className="w-8 h-8 text-purple-500" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.996 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.984zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.432.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
@@ -420,7 +425,7 @@ export default function Home() {
                 </div>
 
                 <div className="relative z-10">
-                  {/* Stars */}
+              
                   <div className="flex items-center gap-0.5 mb-2">
                     {[...Array(5)].map((_, i) => (
                       <svg key={i} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
@@ -429,12 +434,12 @@ export default function Home() {
                     ))}
                   </div>
 
-                  {/* Review Text */}
+
                   <p className="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed text-xs relative z-10">
                     "Outdoor photography session was perfect! The natural lighting and beautiful locations chosen were amazing. The team was patient, creative, and the results were beyond our dreams. Highly recommend!"
                   </p>
 
-                  {/* Client Info */}
+      
                   <div className="flex items-center gap-2 pt-3 border-t border-gray-200/50 dark:border-gray-700/50">
                     <div className="relative">
                       <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-400 to-indigo-500 flex items-center justify-center text-white font-semibold text-xs shadow-sm">
@@ -449,7 +454,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            </ScrollAnimation>
+            </ScrollAnimation> */}
           </div>
         </div>
       </section>
