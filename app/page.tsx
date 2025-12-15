@@ -78,10 +78,10 @@ export default function Home() {
             <ScrollAnimation animationType="fade-right" delay={200}>
               <div className="flex items-center justify-center md:justify-end flex-1 min-h-[120px]">
                 <Image 
-                  src="/images/gido.jpeg" 
+                  src="/images/gido_photo.png" 
                   alt="Gido Photography" 
                   width={300}
-                  height={150}
+                  height={100}
                   className="w-full max-w-xs md:max-w-full h-auto object-contain"
                   style={{ maxHeight: '150px' }}
                   priority
@@ -553,7 +553,7 @@ Lots of love,
                 <div className="w-full h-[300px] md:h-[400px] lg:h-[500px] group">
                   <div className="relative w-full h-full rounded-lg overflow-hidden shadow-xl transition-all duration-700 group-hover:scale-105">
                     <Image 
-                      src="/images/about.jpg"
+                      src="/images/GIDO9183.JPG"
                       alt="About"
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
@@ -569,7 +569,7 @@ Lots of love,
                 <div className="w-full h-[300px] md:h-[400px] lg:h-[500px] group">
                   <div className="relative w-full h-full rounded-lg overflow-hidden shadow-xl transition-all duration-700 group-hover:scale-105">
                     <Image 
-                      src="/images/contact.jpg"
+                      src="/images/GIDO0029.JPG"
                       alt="Contact"
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"

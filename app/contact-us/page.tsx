@@ -185,6 +185,7 @@ export default function ContactUs() {
                     <option value="Portrait Session" className="text-gray-900 dark:text-gray-100">Portrait Session</option>
                     <option value="Event Photography" className="text-gray-900 dark:text-gray-100">Event Photography</option>
                     <option value="Commercial Photography" className="text-gray-900 dark:text-gray-100">Commercial Photography</option>
+                    <option value="Birthday shoot" className="text-gray-900 dark:text-gray-100">Birthday shoot</option>
                     <option value="other" className="text-gray-900 dark:text-gray-100">Other</option>
                   </select>
                   <div className="absolute right-3 top-[42px] pointer-events-none">
@@ -254,7 +255,7 @@ export default function ContactUs() {
                   <div className="flex-1">
                     <h3 className="text-lg font-bold text-black dark:text-white mb-2">Phone</h3>
                     <p className="text-gray-700 dark:text-gray-300 mb-1">
-                      <a href="tel:0530053337" className="hover:text-black dark:hover:text-white transition-colors">0530053337</a> | <a href="tel:0247938292" className="hover:text-black dark:hover:text-white transition-colors">0247938292</a>
+                      0247938292 | 0530053337
                     </p>
                     <p className="text-gray-600 dark:text-gray-400 text-sm">Available Mon-Sat, 9am-6pm</p>
                   </div>

@@ -148,7 +148,7 @@ export default function HeroSlider() {
             className={`transition-all duration-1000 ease-in-out ${
               index === currentSlide
                 ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-10 absolute inset-0'
+                : 'opacity-0 translate-y-10 absolute inset-0 pointer-events-none'
             }`}
           >
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
@@ -165,7 +165,7 @@ export default function HeroSlider() {
             <p className="text-lg sm:text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
               {slide.description}
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center pointer-events-auto">
               <Link
                 href="/ratecard"
                 className="px-5 py-2.5 text-sm bg-white text-black rounded-full font-semibold hover:bg-gray-100 transition-all transform hover:scale-105 hover:-translate-y-1 active:scale-95 shadow-lg hover:shadow-xl relative overflow-hidden group"

@@ -45,6 +45,18 @@ The contact form will send emails to `gidowilly1@gmail.com` when submitted.
 
 **Note:** For production, make sure to add the `RESEND_API_KEY` environment variable to your hosting platform (Vercel, etc.).
 
+### Setting up Environment Variables in Vercel:
+
+1. Go to your project on [Vercel Dashboard](https://vercel.com/dashboard)
+2. Navigate to **Settings** → **Environment Variables**
+3. Click **Add New**
+4. Add the following:
+   - **Name:** `RESEND_API_KEY`
+   - **Value:** Your Resend API key (starts with `re_`)
+   - **Environment:** Select all (Production, Preview, Development)
+5. Click **Save**
+6. Redeploy your application for the changes to take effect
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.

@@ -13,6 +13,9 @@ const lato = Lato({
 export const metadata: Metadata = {
   title: "Gido Photography | Capturing Life's Beautiful Moments",
   description: "Professional photography services capturing life's most precious moments. Specializing in portraits, events, and artistic photography.",
+  icons: {
+    icon: '/icon.png',
+  },
 };
 
 export default function RootLayout({

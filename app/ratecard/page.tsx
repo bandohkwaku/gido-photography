@@ -34,7 +34,7 @@ export default function Ratecard() {
     {
       name: 'BRONZE',
       tier: 'STUDIO',
-      price: 'GHc900',
+      price: 'GHc950',
       originalPrice: null,
       outfit: '1 Outfit',
       photos: '5 edited Photos',
@@ -49,7 +49,7 @@ export default function Ratecard() {
     {
       name: 'SILVER',
       tier: 'STUDIO',
-      price: 'GHc1500',
+      price: 'GHc1800',
       originalPrice: null,
       outfit: '1-2 Outfits',
       photos: '8 edited Photos',
@@ -83,10 +83,10 @@ export default function Ratecard() {
     {
       name: 'BRONZE',
       tier: 'OUTDOOR',
-      price: 'GHc1250',
+      price: 'GHc1500',
       originalPrice: null,
       outfit: '1 Outfit',
-      photos: '5 edited Photos',
+      photos: '7 edited Photos',
       duration: '40 minutes',
       color: 'from-amber-500 via-amber-600 to-orange-600',
       bgGradient: 'from-amber-50/50 via-orange-50/30 to-amber-50/50',
@@ -98,7 +98,7 @@ export default function Ratecard() {
     {
       name: 'SILVER',
       tier: 'OUTDOOR',
-      price: 'GHc1800',
+      price: 'GHc2000',
       originalPrice: null,
       outfit: '1-2 Outfits',
       photos: '8 edited Photos',
@@ -113,7 +113,7 @@ export default function Ratecard() {
     {
       name: 'GOLDEN',
       tier: 'OUTDOOR',
-      price: 'GHc3000',
+      price: 'GHc3500',
       originalPrice: null,
       outfit: '1-3 Outfits',
       photos: '15 edited Photos',

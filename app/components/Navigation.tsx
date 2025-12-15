@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
@@ -34,8 +35,15 @@ export default function Navigation() {
     }`}>
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div className="flex items-center justify-between h-20">
-          <Link href="/" className="text-2xl font-bold tracking-tight text-white transform hover:scale-110 transition-all duration-300 relative group">
-            <span className="relative z-10">Gido Photography</span>
+          <Link href="/" className="transform hover:scale-110 transition-all duration-300 relative group">
+            <Image
+              src="/images/gid.png"
+              alt="Gido Photography"
+              width={150}
+              height={60}
+              className="h-12 w-auto object-contain relative z-10"
+              priority
+            />
             <span className="absolute -inset-2 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 rounded-lg opacity-0 group-hover:opacity-100 blur transition-opacity duration-300"></span>
           </Link>
           <div className="hidden md:flex items-center space-x-8">

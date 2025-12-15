@@ -19,7 +19,7 @@ export default function AboutUs() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <Image
-            src="/images/about.jpg"
+            src="/images/GIDO9183.JPG"
             alt="About Us"
             fill
             sizes="100vw"
@@ -113,10 +113,56 @@ export default function AboutUs() {
               
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {activeFilter === 'Brands' 
-                  ? Array.from({ length: 62 }, (_, i) => i + 1)
-                      .filter(num => ![10, 15, 17, 53, 54].includes(num))
-                      .map((num) => `/images/Brand images/brand-${num}.jpg`)
-                      .map((imageSrc, index) => (
+                  ? [
+                      '/images/Brand images/brand-1.jpg',
+                      '/images/Brand images/brand-3.jpg',
+                      '/images/Brand images/brand-4.jpg',
+                      '/images/Brand images/brand-5.jpg',
+                      '/images/Brand images/brand-7.jpg',
+                      '/images/Brand images/brand-8.jpg',
+                      '/images/Brand images/brand-9.jpg',
+                      '/images/Brand images/brand-11.jpg',
+                      '/images/Brand images/brand-13.jpg',
+                      '/images/Brand images/brand-14.jpg',
+                      '/images/Brand images/brand-16.jpg',
+                      '/images/Brand images/brand-18.jpg',
+                      '/images/Brand images/brand-19.jpg',
+                      '/images/Brand images/brand-20.jpg',
+                      '/images/Brand images/brand-21.jpg',
+                      '/images/Brand images/brand-23.jpg',
+                      '/images/Brand images/brand-24.jpg',
+                      '/images/Brand images/brand-25.jpg',
+                      '/images/Brand images/brand-26.jpg',
+                      '/images/Brand images/brand-27.jpg',
+                      '/images/Brand images/brand-28.jpg',
+                      '/images/Brand images/brand-29.jpg',
+                      '/images/Brand images/brand-30.jpg',
+                      '/images/Brand images/brand-31.jpg',
+                      '/images/Brand images/brand-32.jpg',
+                      '/images/Brand images/brand-35.jpg',
+                      '/images/Brand images/brand-36.jpg',
+                      '/images/Brand images/brand-37.jpg',
+                      '/images/Brand images/brand-39.jpg',
+                      '/images/Brand images/brand-40.jpg',
+                      '/images/Brand images/brand-41.jpg',
+                      '/images/Brand images/brand-42.jpg',
+                      '/images/Brand images/brand-43.jpg',
+                      '/images/Brand images/brand-45.jpg',
+                      '/images/Brand images/brand-46.jpg',
+                      '/images/Brand images/brand-47.jpg',
+                      '/images/Brand images/brand-49.jpg',
+                      '/images/Brand images/brand-50.jpg',
+                      '/images/Brand images/brand-51.jpg',
+                      '/images/Brand images/brand-52.jpg',
+                      '/images/Brand images/brand-55.jpg',
+                      '/images/Brand images/brand-56.jpg',
+                      '/images/Brand images/brand-57.jpg',
+                      '/images/Brand images/brand-58.jpg',
+                      '/images/Brand images/brand-60.jpg',
+                      '/images/Brand images/brand-61.jpg',
+                      '/images/Brand images/brand-62.jpg',
+                      '/images/Brand images/IMG_7398.JPG',
+                    ].map((imageSrc, index) => (
                     <div
                       key={index}
                       className="relative aspect-square overflow-hidden group cursor-pointer"

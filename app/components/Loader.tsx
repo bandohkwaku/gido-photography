@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 export default function Loader() {
   const [isLoading, setIsLoading] = useState(true);
@@ -38,29 +39,17 @@ export default function Loader() {
 
       {/* Main loader content */}
       <div className="relative z-10 flex flex-col items-center justify-center">
-        {/* Camera icon animation */}
-        <div className="relative mb-8 w-24 h-24 flex items-center justify-center">
-          {/* Camera body */}
-          <div className="w-20 h-20 border-4 border-white dark:border-black rounded-lg relative animate-pulse">
-            <div className="absolute inset-2 border-2 border-white dark:border-black rounded"></div>
-            {/* Camera lens */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 border-2 border-white dark:border-black rounded-full">
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white dark:bg-black rounded-full"></div>
-            </div>
-            {/* Flash */}
-            <div className="absolute top-2 right-2 w-3 h-3 bg-white dark:bg-black rounded"></div>
-          </div>
-          
-          {/* Rotating shutter animation */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="w-24 h-24 border-t-4 border-white/80 dark:border-black/80 rounded-full animate-shutter"></div>
-          </div>
+        {/* Brand logo */}
+        <div className="mb-8 animate-fade-in-up">
+          <Image
+            src="/images/gid.png"
+            alt="Gido Photography"
+            width={200}
+            height={80}
+            className="w-auto h-auto max-w-[200px] sm:max-w-[250px] object-contain"
+            priority
+          />
         </div>
-
-        {/* Brand name */}
-        <h1 className="text-3xl sm:text-4xl font-bold text-white dark:text-black mb-4 animate-fade-in-up">
-          Gido Photography
-        </h1>
 
         {/* Loading dots */}
         <div className="flex space-x-2">

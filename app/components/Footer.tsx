@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -9,8 +10,15 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
-            <Link href="/" className="text-2xl font-bold mb-4 inline-block hover:scale-105 transition-transform">
-              Gido Photography
+            <Link href="/" className="mb-4 inline-block hover:scale-105 transition-transform">
+              <Image
+                src="/images/gid.png"
+                alt="Gido Photography"
+                width={150}
+                height={60}
+                className="h-8 w-auto object-contain"
+                priority
+              />
             </Link>
             <p className="text-gray-400 dark:text-gray-600 mb-4 max-w-md">
               Capturing life&apos;s most beautiful moments with professional photography services. 
@@ -92,8 +100,8 @@ export default function Footer() {
               <li className="hover:text-white dark:hover:text-black transition-colors">
                 <a href="mailto:gidowilly1@gmail.com">gidowilly1@gmail.com</a>
               </li>
-              <li className="hover:text-white dark:hover:text-black transition-colors">
-                <a href="tel:0530053337">0530053337</a> | <a href="tel:0247938292">0247938292</a>
+              <li>
+                0247938292 | 0530053337
               </li>
               <li>
                 Accra - Ghana
