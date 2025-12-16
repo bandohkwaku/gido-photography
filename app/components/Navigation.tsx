@@ -23,6 +23,7 @@ export default function Navigation() {
     { href: '/about-us', label: 'About Us' },
     { href: '/ratecard', label: 'Ratecard' },
     { href: '/store', label: 'Store' },
+    { href: '/booking', label: 'Booking' },
     { href: '/terms', label: 'Terms & Conditions' },
     { href: '/contact-us', label: 'Contact Us' },
   ];

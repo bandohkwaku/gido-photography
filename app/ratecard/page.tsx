@@ -346,6 +346,7 @@ export default function Ratecard() {
               className={`object-cover transition-transform duration-700 ${
                 isHovered ? 'scale-110' : 'scale-100'
               }`}
+              loading="lazy"
             />
             {/* Tier Badge */}
             <div className="absolute top-4 right-4 z-20">
@@ -421,7 +422,7 @@ export default function Ratecard() {
 
             {/* CTA Button */}
             <Link
-              href="/contact-us"
+              href="/booking"
               className="block w-full mt-4 py-3 px-6 rounded-xl font-bold text-center
                 bg-gradient-to-r from-gray-700 to-gray-900 dark:from-gray-600 dark:to-gray-800 text-white
                 shadow-lg hover:shadow-xl
@@ -521,6 +522,7 @@ export default function Ratecard() {
               className={`object-cover transition-transform duration-700 ${
                 isHovered ? 'scale-110' : 'scale-100'
               }`}
+              loading="lazy"
             />
             {/* Tier Badge */}
             <div className="absolute top-4 right-4 z-20">
@@ -642,7 +644,7 @@ export default function Ratecard() {
 
             {/* CTA Button */}
             <Link
-              href="/contact-us"
+              href="/booking"
               className="block w-full mt-4 py-3 px-6 rounded-xl font-bold text-center
                 bg-gradient-to-r from-gray-700 to-gray-900 dark:from-gray-600 dark:to-gray-800 text-white
                 shadow-lg hover:shadow-xl

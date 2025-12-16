@@ -11,10 +11,11 @@ import { useEffect, useState } from 'react';
 
 export default function Home() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
 
-  // Array of all featured images in order (as they appear in the grid)
+  // Array of all featured images in order
   const featuredImages = [
     '/images/featured/GIDO8549-1-min.jpg',
     '/images/featured/IMG_1736-min.JPG',
@@ -30,6 +31,7 @@ export default function Home() {
     '/images/featured/GIDO00281-min.JPG',
   ];
 
+  // Mouse movement effect
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
@@ -38,40 +40,58 @@ export default function Home() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
+  // Show scroll to top button when scrolled down
   useEffect(() => {
-    if (!lightboxOpen) return;
+    const handleScroll = () => {
+      setShowScrollToTop(window.scrollY > window.innerHeight);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        closeLightbox();
-      } else if (e.key === 'ArrowLeft') {
-        setCurrentImageIndex((prev) => (prev - 1 + featuredImages.length) % featuredImages.length);
-      } else if (e.key === 'ArrowRight') {
-        setCurrentImageIndex((prev) => (prev + 1) % featuredImages.length);
+  // Navigation functions
+  const goToPrevious = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedImageIndex !== null && featuredImages.length > 0) {
+      const newIndex = selectedImageIndex === 0 ? featuredImages.length - 1 : selectedImageIndex - 1;
+      setSelectedImageIndex(newIndex);
+      setSelectedImage(featuredImages[newIndex]);
+    }
+  };
+
+  const goToNext = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedImageIndex !== null && featuredImages.length > 0) {
+      const newIndex = selectedImageIndex === featuredImages.length - 1 ? 0 : selectedImageIndex + 1;
+      setSelectedImageIndex(newIndex);
+      setSelectedImage(featuredImages[newIndex]);
+    }
+  };
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (selectedImage !== null) {
+        if (e.key === 'ArrowLeft') {
+          goToPrevious();
+        } else if (e.key === 'ArrowRight') {
+          goToNext();
+        } else if (e.key === 'Escape') {
+          setSelectedImage(null);
+          setSelectedImageIndex(null);
+        }
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lightboxOpen, featuredImages.length]);
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [selectedImage, selectedImageIndex, featuredImages]);
 
-  const openLightbox = (index: number) => {
-    setCurrentImageIndex(index);
-    setLightboxOpen(true);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const closeLightbox = () => {
-    setLightboxOpen(false);
-    document.body.style.overflow = 'unset';
-  };
-
-  const handleNext = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % featuredImages.length);
-  };
-
-  const handlePrevious = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + featuredImages.length) % featuredImages.length);
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   };
 
   return (
@@ -95,6 +115,7 @@ export default function Home() {
       <section className="py-20 px-6 sm:px-8 lg:px-12 bg-white dark:bg-black relative overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-1 lg:gap-2">
+            
             {/* Left Section - Wedding Logo */}
             <ScrollAnimation animationType="fade-left" delay={0}>
               <div className="flex items-center justify-center md:justify-start flex-1 min-h-[120px]">
@@ -116,7 +137,10 @@ export default function Home() {
             {/* Middle Section - Text */}
             <ScrollAnimation animationType="zoom" delay={100}>
               <div className="flex flex-col items-center justify-center text-center flex-1 px-0">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-serif italic text-black dark:text-white mb-0.5" style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontStyle: 'italic' }}>
+                <h2 
+                  className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-serif italic text-black dark:text-white mb-0.5" 
+                  style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontStyle: 'italic' }}
+                >
                   Gido Photography
                 </h2>
                 <p className="text-xs sm:text-xs md:text-sm text-gray-600 dark:text-gray-400 font-sans tracking-wide uppercase">
@@ -146,12 +170,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Gallery Preview Section */}
+      {/* Gallery Preview Section - Masonry Layout */}
       <section className="py-24 px-6 sm:px-8 lg:px-12 bg-white dark:bg-black relative overflow-hidden">
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500"></div>
         </div>
+        
         <div className="max-w-7xl mx-auto relative z-10">
+          {/* Section Header */}
           <ScrollAnimation animationType="zoom">
             <div className="text-center mb-16">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black dark:text-white mb-4 relative inline-block">
@@ -164,210 +190,44 @@ export default function Home() {
             </div>
           </ScrollAnimation>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-            {/* Column 1 */}
-            <div className="flex flex-col gap-4 md:gap-6">
-              {/* Row 1 - Product shot (square-ish) */}
-              <ScrollAnimation animationType="fade-left" delay={0}>
+          {/* Masonry Grid Layout */}
+          <div className="columns-1 md:columns-2 lg:columns-3 gap-4 md:gap-6 space-y-4 md:space-y-6">
+            
+            {featuredImages.map((image, index) => (
+              <ScrollAnimation 
+                key={index} 
+                animationType="fade-up" 
+                delay={index * 100}
+              >
                 <div 
-                  onClick={() => openLightbox(0)}
-                  className="group relative overflow-hidden rounded-2xl aspect-square cursor-pointer transform transition-all duration-700 hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-2"
+                  onClick={() => {
+                    setSelectedImage(image);
+                    setSelectedImageIndex(index);
+                  }}
+                  className="group relative overflow-hidden rounded-2xl cursor-pointer transform transition-all duration-700 hover:scale-[1.02] hover:shadow-2xl break-inside-avoid mb-4 md:mb-6"
                 >
-                  <img
-                    src="/images/featured/GIDO8549-1-min.jpg"
-                    alt="Featured photography"
-                    className="absolute inset-0 w-full h-full object-cover z-0"
+                  <Image
+                    src={image}
+                    alt={`Featured photography ${index + 1}`}
+                    width={800}
+                    height={1200}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="w-full h-auto object-cover"
+                    loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
-                  <div className="absolute inset-0 border-4 border-white/0 group-hover:border-white/50 rounded-2xl transition-all duration-500 z-20"></div>
-                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                  
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
+                    <svg className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </div>
+                  
+                  {/* Hover Border */}
+                  <div className="absolute inset-0 border-4 border-white/0 group-hover:border-white/50 rounded-2xl transition-all duration-500"></div>
                 </div>
               </ScrollAnimation>
-              {/* Row 2 - Product shot (horizontal) */}
-              <ScrollAnimation animationType="fade-left" delay={300}>
-                <div 
-                  onClick={() => openLightbox(1)}
-                  className="group relative overflow-hidden rounded-2xl aspect-[4/3] cursor-pointer transform transition-all duration-700 hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-2"
-                >
-                  <img
-                    src="/images/featured/IMG_1736-min.JPG"
-                    alt="Featured photography"
-                    className="absolute inset-0 w-full h-full object-cover z-0"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
-                  <div className="absolute inset-0 border-4 border-white/0 group-hover:border-white/50 rounded-2xl transition-all duration-500 z-20"></div>
-                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                </div>
-              </ScrollAnimation>
-              {/* Row 3 - Product shot (vertical) */}
-              <ScrollAnimation animationType="fade-left" delay={600}>
-                <div 
-                  onClick={() => openLightbox(2)}
-                  className="group relative overflow-hidden rounded-2xl aspect-[3/4] cursor-pointer transform transition-all duration-700 hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-2"
-                >
-                  <img
-                    src="/images/featured/GIDO_7785-min.JPG"
-                    alt="Featured photography"
-                    className="absolute inset-0 w-full h-full object-cover z-0"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
-                  <div className="absolute inset-0 border-4 border-white/0 group-hover:border-white/50 rounded-2xl transition-all duration-500 z-20"></div>
-                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                </div>
-              </ScrollAnimation>
-              {/* Row 4 - Close-up portrait */}
-              <ScrollAnimation animationType="fade-left" delay={900}>
-                <div 
-                  onClick={() => openLightbox(3)}
-                  className="group relative overflow-hidden rounded-2xl aspect-square cursor-pointer transform transition-all duration-700 hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-2"
-                >
-                  <img
-                    src="/images/featured/IMG_0089-min.JPG"
-                    alt="Featured photography"
-                    className="absolute inset-0 w-full h-full object-cover z-0"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
-                  <div className="absolute inset-0 border-4 border-white/0 group-hover:border-white/50 rounded-2xl transition-all duration-500 z-20"></div>
-                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                </div>
-              </ScrollAnimation>
-            </div>
-
-            {/* Column 2 */}
-            <div className="flex flex-col gap-4 md:gap-6">
-              {/* Row 1 - Full-body outdoor */}
-              <ScrollAnimation animationType="zoom" delay={100}>
-                <div 
-                  onClick={() => openLightbox(4)}
-                  className="group relative overflow-hidden rounded-2xl aspect-[3/4] cursor-pointer transform transition-all duration-700 hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-2"
-                >
-                  <img
-                    src="/images/featured/IMG_5891-min.jpg"
-                    alt="Featured photography"
-                    className="absolute inset-0 w-full h-full object-cover z-0"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
-                  <div className="absolute inset-0 border-4 border-white/0 group-hover:border-white/50 rounded-2xl transition-all duration-500 z-20"></div>
-                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                </div>
-              </ScrollAnimation>
-              {/* Row 2 - Portrait */}
-              <ScrollAnimation animationType="zoom" delay={400}>
-                <div 
-                  onClick={() => openLightbox(5)}
-                  className="group relative overflow-hidden rounded-2xl aspect-square cursor-pointer transform transition-all duration-700 hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-2"
-                >
-                  <img
-                    src="/images/featured/IMG_3150-min.JPG"
-                    alt="Featured photography"
-                    className="absolute inset-0 w-full h-full object-cover z-0"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
-                  <div className="absolute inset-0 border-4 border-white/0 group-hover:border-white/50 rounded-2xl transition-all duration-500 z-20"></div>
-                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                </div>
-              </ScrollAnimation>
-              {/* Row 3 - Portrait in motion */}
-              <ScrollAnimation animationType="zoom" delay={700}>
-                <div 
-                  onClick={() => openLightbox(6)}
-                  className="group relative overflow-hidden rounded-2xl aspect-[3/4] cursor-pointer transform transition-all duration-700 hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-2"
-                >
-                  <img
-                    src="/images/featured/IMG_4149-min.JPG"
-                    alt="Featured photography"
-                    className="absolute inset-0 w-full h-full object-cover z-0"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
-                  <div className="absolute inset-0 border-4 border-white/0 group-hover:border-white/50 rounded-2xl transition-all duration-500 z-20"></div>
-                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                </div>
-              </ScrollAnimation>
-              {/* Row 4 - Full-body outdoor */}
-              <ScrollAnimation animationType="zoom" delay={1000}>
-                <div 
-                  onClick={() => openLightbox(7)}
-                  className="group relative overflow-hidden rounded-2xl aspect-[3/4] cursor-pointer transform transition-all duration-700 hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-2"
-                >
-                  <img
-                    src="/images/featured/IMG_4244-min.JPG"
-                    alt="Featured photography"
-                    className="absolute inset-0 w-full h-full object-cover z-0"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
-                  <div className="absolute inset-0 border-4 border-white/0 group-hover:border-white/50 rounded-2xl transition-all duration-500 z-20"></div>
-                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                </div>
-              </ScrollAnimation>
-            </div>
-
-            {/* Column 3 */}
-            <div className="flex flex-col gap-4 md:gap-6">
-              {/* Row 1 - Portrait */}
-              <ScrollAnimation animationType="fade-right" delay={200}>
-                <div 
-                  onClick={() => openLightbox(8)}
-                  className="group relative overflow-hidden rounded-2xl aspect-square cursor-pointer transform transition-all duration-700 hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-2"
-                >
-                  <img
-                    src="/images/featured/IMG_4306-min.JPG"
-                    alt="Featured photography"
-                    className="absolute inset-0 w-full h-full object-cover z-0"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
-                  <div className="absolute inset-0 border-4 border-white/0 group-hover:border-white/50 rounded-2xl transition-all duration-500 z-20"></div>
-                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                </div>
-              </ScrollAnimation>
-              {/* Row 2 - Lifestyle shot */}
-              <ScrollAnimation animationType="fade-right" delay={500}>
-                <div 
-                  onClick={() => openLightbox(9)}
-                  className="group relative overflow-hidden rounded-2xl aspect-[4/3] cursor-pointer transform transition-all duration-700 hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-2"
-                >
-                  <img
-                    src="/images/featured/IMG_4307-min.JPG"
-                    alt="Featured photography"
-                    className="absolute inset-0 w-full h-full object-cover z-0"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
-                  <div className="absolute inset-0 border-4 border-white/0 group-hover:border-white/50 rounded-2xl transition-all duration-500 z-20"></div>
-                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                </div>
-              </ScrollAnimation>
-              {/* Row 3 - Full-body outdoor */}
-              <ScrollAnimation animationType="fade-right" delay={800}>
-                <div 
-                  onClick={() => openLightbox(10)}
-                  className="group relative overflow-hidden rounded-2xl aspect-[3/4] cursor-pointer transform transition-all duration-700 hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-2"
-                >
-                  <img
-                    src="/images/featured/IMG_5336-min.JPG"
-                    alt="Featured photography"
-                    className="absolute inset-0 w-full h-full object-cover z-0"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
-                  <div className="absolute inset-0 border-4 border-white/0 group-hover:border-white/50 rounded-2xl transition-all duration-500 z-20"></div>
-                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                </div>
-              </ScrollAnimation>
-              {/* Row 4 - Close-up portrait */}
-              <ScrollAnimation animationType="fade-right" delay={1100}>
-                <div 
-                  onClick={() => openLightbox(11)}
-                  className="group relative overflow-hidden rounded-2xl aspect-square cursor-pointer transform transition-all duration-700 hover:scale-[1.02] hover:shadow-2xl hover:-translate-y-2"
-                >
-                  <img
-                    src="/images/featured/GIDO00281-min.JPG"
-                    alt="Featured photography"
-                    className="absolute inset-0 w-full h-full object-cover z-0"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
-                  <div className="absolute inset-0 border-4 border-white/0 group-hover:border-white/50 rounded-2xl transition-all duration-500 z-20"></div>
-                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-                </div>
-              </ScrollAnimation>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -377,6 +237,7 @@ export default function Home() {
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500"></div>
         </div>
+        
         <div className="max-w-7xl mx-auto relative z-10">
           <ScrollAnimation animationType="zoom">
             <div className="text-center mb-16">
@@ -391,9 +252,10 @@ export default function Home() {
           </ScrollAnimation>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-            {/* Review 1 */}
+            {/* Review Card */}
             <ScrollAnimation animationType="fade-up" delay={0}>
               <div className="relative bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-pink-50/50 dark:from-gray-900/50 dark:via-gray-800/50 dark:to-gray-900/50 backdrop-blur-xl rounded-xl p-3 md:p-4 border border-white/20 dark:border-gray-700/50 shadow-md">
+                
                 {/* Quote Icon */}
                 <div className="absolute top-3 right-3 opacity-10">
                   <svg className="w-8 h-8 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
@@ -402,7 +264,7 @@ export default function Home() {
                 </div>
 
                 <div className="relative z-10">
-                  {/* Stars */}
+                  {/* Star Rating */}
                   <div className="flex items-center gap-0.5 mb-2">
                     {[...Array(5)].map((_, i) => (
                       <svg key={i} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
@@ -413,13 +275,7 @@ export default function Home() {
 
                   {/* Review Text */}
                   <p className="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed text-xs relative z-10">
-                    "Gido!! Gido!! I'm alive!!..!
-Where do I even start? From our lateness to the pre-wedding shot, to your drip for the traditional and your steeze for the wedding!! My oh my! ! remember telling my sister and the glam team that if you do not go ahead with the shoot, I won't be surprised because we were fashionably late, but no way.
-You were ever so calm, bubbly, and receptive. Right there, I was so certain I got the right man. Director 1, thank you for pulling up for us in several ways, God bless you. You and your team will go far, Kojo, and I know this because of how you value people and not just your work, which is outstanding. Cheers to more gigs and kokotii vibes.Thank you, Kwame, for blinding me all the time too.
-I thought you were my favourite one on the team until I met baby police.
-⁠Such a humble soul. You have an incredible team, and you all are what a couple need on their day. Let's set a fufu date asap aloo, you're not alive?
-Lots of love,
-"
+                    "Gido!! Gido!! I'm alive!!..! Where do I even start? From our lateness to the pre-wedding shot, to your drip for the traditional and your steeze for the wedding!! My oh my! I remember telling my sister and the glam team that if you do not go ahead with the shoot, I won't be surprised because we were fashionably late, but no way. You were ever so calm, bubbly, and receptive. Right there, I was so certain I got the right man. Director 1, thank you for pulling up for us in several ways, God bless you. You and your team will go far, Kojo, and I know this because of how you value people and not just your work, which is outstanding. Cheers to more gigs and kokotii vibes. Thank you, Kwame, for blinding me all the time too. I thought you were my favourite one on the team until I met baby police. Such a humble soul. You have an incredible team, and you all are what a couple need on their day. Let's set a fufu date asap aloo, you're not alive? Lots of love,"
                   </p>
 
                   {/* Client Info */}
@@ -438,89 +294,6 @@ Lots of love,
                 </div>
               </div>
             </ScrollAnimation>
-
-            {/* Review 2 */}
-            {/* <ScrollAnimation animationType="fade-up" delay={200}>
-              <div className="relative bg-gradient-to-br from-pink-50/50 via-red-50/30 to-orange-50/50 dark:from-gray-900/50 dark:via-gray-800/50 dark:to-gray-900/50 backdrop-blur-xl rounded-xl p-3 md:p-4 border border-white/20 dark:border-gray-700/50 shadow-md">
-            
-                <div className="absolute top-3 right-3 opacity-10">
-                  <svg className="w-8 h-8 text-pink-500" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.996 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.984zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.432.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-                  </svg>
-                </div>
-
-                <div className="relative z-10">
-        
-                  <div className="flex items-center gap-0.5 mb-2">
-                    {[...Array(5)].map((_, i) => (
-                      <svg key={i} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                        <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                      </svg>
-                    ))}
-                  </div>
-
-                  <p className="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed text-xs relative z-10">
-                    "The studio session was incredible! The team made us feel so comfortable and the final photos were stunning. Professional, friendly, and delivered exactly what we wanted. Thank you!"
-                  </p>
-
-       
-                  <div className="flex items-center gap-2 pt-3 border-t border-gray-200/50 dark:border-gray-700/50">
-                    <div className="relative">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-pink-400 to-red-500 flex items-center justify-center text-white font-semibold text-xs shadow-sm">
-                        ES
-                      </div>
-                      <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white dark:border-gray-900"></div>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-black dark:text-white text-xs">Efua & Samuel</h4>
-                      <p className="text-[10px] text-gray-500 dark:text-gray-400">Studio Session</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ScrollAnimation> */}
-
-            {/* Review 3 */}
-            {/* <ScrollAnimation animationType="fade-up" delay={400}>
-              <div className="relative bg-gradient-to-br from-purple-50/50 via-indigo-50/30 to-blue-50/50 dark:from-gray-900/50 dark:via-gray-800/50 dark:to-gray-900/50 backdrop-blur-xl rounded-xl p-3 md:p-4 border border-white/20 dark:border-gray-700/50 shadow-md">
-   
-                <div className="absolute top-3 right-3 opacity-10">
-                  <svg className="w-8 h-8 text-purple-500" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.996 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.984zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.432.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-                  </svg>
-                </div>
-
-                <div className="relative z-10">
-              
-                  <div className="flex items-center gap-0.5 mb-2">
-                    {[...Array(5)].map((_, i) => (
-                      <svg key={i} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                        <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                      </svg>
-                    ))}
-                  </div>
-
-
-                  <p className="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed text-xs relative z-10">
-                    "Outdoor photography session was perfect! The natural lighting and beautiful locations chosen were amazing. The team was patient, creative, and the results were beyond our dreams. Highly recommend!"
-                  </p>
-
-      
-                  <div className="flex items-center gap-2 pt-3 border-t border-gray-200/50 dark:border-gray-700/50">
-                    <div className="relative">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-400 to-indigo-500 flex items-center justify-center text-white font-semibold text-xs shadow-sm">
-                        MK
-                      </div>
-                      <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white dark:border-gray-900"></div>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-black dark:text-white text-xs">Mary & Kofi</h4>
-                      <p className="text-[10px] text-gray-500 dark:text-gray-400">Outdoor Session</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ScrollAnimation> */}
           </div>
         </div>
       </section>
@@ -541,44 +314,28 @@ Lots of love,
           </ScrollAnimation>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 md:gap-6 items-center justify-items-center">
-            {/* Brand 1 */}
-            <ScrollAnimation animationType="fade-up" delay={0}>
-              <div className="flex items-center justify-center p-4 md:p-6 bg-white dark:bg-gray-900 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 animate-shake w-full max-w-[200px] h-[150px] md:h-[180px]" style={{ animationDelay: '0s' }}>
-                <Image
-                  src="/images/brands/b1.jpg"
-                  alt="Brand 1"
-                  width={200}
-                  height={180}
-                  className="w-full h-full object-contain"
-                />
-              </div>
-            </ScrollAnimation>
-
-            {/* Brand 2 */}
-            <ScrollAnimation animationType="fade-up" delay={100}>
-              <div className="flex items-center justify-center p-4 md:p-6 bg-white dark:bg-gray-900 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 animate-shake w-full max-w-[200px] h-[150px] md:h-[180px]" style={{ animationDelay: '0.5s' }}>
-                <Image
-                  src="/images/brands/b2.png"
-                  alt="Brand 2"
-                  width={200}
-                  height={180}
-                  className="w-full h-full object-contain"
-                />
-              </div>
-            </ScrollAnimation>
-
-            {/* Brand 3 */}
-            <ScrollAnimation animationType="fade-up" delay={200}>
-              <div className="flex items-center justify-center p-4 md:p-6 bg-white dark:bg-gray-900 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 animate-shake w-full max-w-[200px] h-[150px] md:h-[180px]" style={{ animationDelay: '1s' }}>
-                <Image
-                  src="/images/brands/b3.png"
-                  alt="Brand 3"
-                  width={200}
-                  height={180}
-                  className="w-full h-full object-contain"
-                />
-              </div>
-            </ScrollAnimation>
+            {[
+              { src: '/images/brands/b1.jpg', alt: 'Brand 1', delay: 0 },
+              { src: '/images/brands/b2.png', alt: 'Brand 2', delay: 100 },
+              { src: '/images/brands/b3.png', alt: 'Brand 3', delay: 200 },
+            ].map((brand, index) => (
+              <ScrollAnimation key={index} animationType="fade-up" delay={brand.delay}>
+                <div 
+                  className="flex items-center justify-center p-4 md:p-6 bg-white dark:bg-gray-900 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 animate-shake w-full max-w-[200px] h-[150px] md:h-[180px]" 
+                  style={{ animationDelay: `${index * 0.5}s` }}
+                >
+                  <Image
+                    src={brand.src}
+                    alt={brand.alt}
+                    width={200}
+                    height={180}
+                    sizes="(max-width: 768px) 50vw, 33vw"
+                    className="w-full h-full object-contain"
+                    loading="lazy"
+                  />
+                </div>
+              </ScrollAnimation>
+            ))}
           </div>
         </div>
       </section>
@@ -586,20 +343,21 @@ Lots of love,
       {/* Life's Beauty Philosophy Section */}
       <section className="py-24 px-6 sm:px-8 lg:px-12 bg-black relative overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          {/* Title - Top Left */}
+          
+          {/* Title */}
           <ScrollAnimation animationType="fade-left" delay={0}>
             <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light text-white mb-12 md:mb-16 text-left">
               Life's Beauty
             </h2>
           </ScrollAnimation>
 
-          {/* Philosophy Section - Left heading, Right text */}
+          {/* Philosophy Text */}
           <div className="flex flex-col md:flex-row items-start gap-8 md:gap-12 lg:gap-16 mb-16 md:mb-20">
             <ScrollAnimation animationType="fade-left" delay={100}>
               <div className="flex items-center gap-3">
                 <span className="text-white text-2xl">*</span>
                 <h3 className="text-xl sm:text-2xl md:text-3xl font-light text-white uppercase tracking-wide">
-                Quote
+                  Quote
                 </h3>
               </div>
             </ScrollAnimation>
@@ -611,121 +369,129 @@ Lots of love,
             </ScrollAnimation>
           </div>
 
-          {/* Two Images Layout - Side by side */}
+          {/* Images Grid */}
           <div className="relative mt-12 md:mt-16 w-full">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
-              {/* First Image */}
-              <ScrollAnimation animationType="fade-up" delay={300}>
-                <div className="w-full h-[300px] md:h-[400px] lg:h-[500px] group">
-                  <div className="relative w-full h-full rounded-lg overflow-hidden shadow-xl transition-all duration-700 group-hover:scale-105">
-                    <Image 
-                      src="/images/GIDO9183.JPG"
-                      alt="About"
-                      fill
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              {[
+                { src: '/images/GIDO9183.JPG', alt: 'About', delay: 300 },
+                { src: '/images/GIDO0029.JPG', alt: 'Contact', delay: 400 },
+              ].map((img, index) => (
+                <ScrollAnimation key={index} animationType="fade-up" delay={img.delay}>
+                  <div className="w-full h-[300px] md:h-[400px] lg:h-[500px] group">
+                    <div className="relative w-full h-full rounded-lg overflow-hidden shadow-xl transition-all duration-700 group-hover:scale-105">
+                      <Image 
+                        src={img.src}
+                        alt={img.alt}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    </div>
                   </div>
-                </div>
-              </ScrollAnimation>
-              
-              {/* Second Image */}
-              <ScrollAnimation animationType="fade-up" delay={400}>
-                <div className="w-full h-[300px] md:h-[400px] lg:h-[500px] group">
-                  <div className="relative w-full h-full rounded-lg overflow-hidden shadow-xl transition-all duration-700 group-hover:scale-105">
-                    <Image 
-                      src="/images/GIDO0029.JPG"
-                      alt="Contact"
-                      fill
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  </div>
-                </div>
-              </ScrollAnimation>
+                </ScrollAnimation>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
       {/* Lightbox Modal */}
-      {lightboxOpen && (
+      {selectedImage && (
         <div 
-          className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-sm"
-          onClick={closeLightbox}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
+          onClick={() => {
+            setSelectedImage(null);
+            setSelectedImageIndex(null);
+          }}
         >
-          {/* Close Button */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              closeLightbox();
-            }}
-            className="absolute top-4 right-4 md:top-8 md:right-8 z-50 text-white hover:text-gray-300 transition-all duration-200 p-3 bg-black/50 hover:bg-black/70 rounded-full backdrop-blur-sm"
-            aria-label="Close lightbox"
-          >
-            <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+          <div className="relative max-w-5xl max-h-full w-full flex items-center justify-center">
+            {/* Previous button */}
+            {featuredImages.length > 1 && (
+              <button
+                onClick={goToPrevious}
+                className="absolute left-4 md:left-8 z-10 text-white hover:text-gray-300 transition-colors bg-black/50 hover:bg-black/70 rounded-full p-3 backdrop-blur-sm"
+                aria-label="Previous image"
+              >
+                <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+            )}
 
-          {/* Previous Button */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handlePrevious();
-            }}
-            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-50 text-white hover:text-gray-300 transition-colors duration-200 p-3 bg-black/50 rounded-full backdrop-blur-sm"
-            aria-label="Previous image"
-          >
-            <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-
-          {/* Next Button */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleNext();
-            }}
-            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-50 text-white hover:text-gray-300 transition-colors duration-200 p-3 bg-black/50 rounded-full backdrop-blur-sm"
-            aria-label="Next image"
-          >
-            <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-
-          {/* Image Container */}
-          <div 
-            className="absolute inset-0 flex items-center justify-center p-4 md:p-8 pb-20"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="w-full h-full flex items-center justify-center">
-              <img
-                src={featuredImages[currentImageIndex]}
-                alt={`Featured photography ${currentImageIndex + 1}`}
-                className="max-w-full max-h-full object-contain"
-                style={{ 
-                  maxHeight: '85vh',
-                  width: 'auto',
-                  height: 'auto'
-                }}
-                onLoad={(e) => {
-                  // Ensure image is visible
-                  e.currentTarget.style.display = 'block';
-                }}
+            <div className="relative max-w-full max-h-[90vh] flex items-center justify-center">
+              <Image
+                src={selectedImage}
+                alt="Full view"
+                width={1200}
+                height={1200}
+                sizes="90vw"
+                className="object-contain max-h-[90vh] w-auto"
+                priority
+                onClick={(e) => e.stopPropagation()}
               />
             </div>
-          </div>
 
-          {/* Image Counter */}
-          <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 z-50 text-white text-sm md:text-base bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm">
-            {currentImageIndex + 1} / {featuredImages.length}
+            {/* Next button */}
+            {featuredImages.length > 1 && (
+              <button
+                onClick={goToNext}
+                className="absolute right-4 md:right-8 z-10 text-white hover:text-gray-300 transition-colors bg-black/50 hover:bg-black/70 rounded-full p-3 backdrop-blur-sm"
+                aria-label="Next image"
+              >
+                <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            )}
+
+            {/* Close button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedImage(null);
+                setSelectedImageIndex(null);
+              }}
+              className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors bg-black/50 hover:bg-black/70 rounded-full p-3 backdrop-blur-sm z-10"
+              aria-label="Close"
+            >
+              <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* Image counter */}
+            {featuredImages.length > 1 && selectedImageIndex !== null && (
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm text-sm md:text-base">
+                {selectedImageIndex + 1} / {featuredImages.length}
+              </div>
+            )}
           </div>
         </div>
+      )}
+
+      {/* Scroll to Top Button */}
+      {showScrollToTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 md:bottom-12 right-4 md:right-8 z-50 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full p-2 md:p-2.5 transition-all duration-300 hover:scale-110 animate-bounce shadow-lg border border-white/30"
+          aria-label="Scroll to top"
+        >
+          <svg
+            className="w-4 h-4 md:w-5 md:h-5 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 10l7-7m0 0l7 7m-7-7v18"
+            />
+          </svg>
+        </button>
       )}
 
       <Footer />

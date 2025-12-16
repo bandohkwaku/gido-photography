@@ -118,6 +118,13 @@ export default function HeroSlider() {
     setTimeout(() => setIsAutoPlaying(true), 10000);
   };
 
+  const scrollToNextSection = () => {
+    window.scrollTo({
+      top: window.innerHeight,
+      behavior: 'smooth'
+    });
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Slides */}
@@ -135,6 +142,7 @@ export default function HeroSlider() {
             sizes="100vw"
             className="object-cover"
             priority={index === 0}
+            loading={index <= 1 ? undefined : 'lazy'}
           />
           <div className="absolute inset-0 bg-black/60 dark:bg-black/70"></div>
         </div>
@@ -242,7 +250,11 @@ export default function HeroSlider() {
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-20 md:bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer z-20 md:left-auto md:right-8 md:transform-none">
+      <button
+        onClick={scrollToNextSection}
+        className="absolute bottom-20 md:bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer z-20 md:left-auto md:right-8 md:transform-none bg-transparent border-none p-2 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-full"
+        aria-label="Scroll to next section"
+      >
         <svg
           className="w-6 h-6 text-white hover:scale-125 transition-transform"
           fill="none"
@@ -256,7 +268,7 @@ export default function HeroSlider() {
             d="M19 14l-7 7m0 0l-7-7m7 7V3"
           />
         </svg>
-      </div>
+      </button>
     </section>
   );
 }

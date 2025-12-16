@@ -284,6 +284,8 @@ function TermsContent() {
           )}
         </div>
       </section>
+
+
       <Footer />
     </div>
   );
