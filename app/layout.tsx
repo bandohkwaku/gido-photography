@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Lato } from "next/font/google";
 import "./globals.css";
-import Loader from "./components/Loader";
 import ContentWrapper from "./components/ContentWrapper";
 
 const lato = Lato({
@@ -28,7 +27,6 @@ export default function RootLayout({
       <body
         className={`${lato.variable} font-sans antialiased`}
       >
-        <Loader />
         <ContentWrapper>
           {children}
         </ContentWrapper>
