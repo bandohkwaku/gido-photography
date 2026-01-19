@@ -34,7 +34,7 @@ export default function Ratecard() {
     {
       name: 'BRONZE',
       tier: 'STUDIO',
-      price: 'GHc950',
+      price: 'GHc1000',
       originalPrice: null,
       outfit: '1 Outfit',
       photos: '5 edited Photos',
@@ -49,7 +49,7 @@ export default function Ratecard() {
     {
       name: 'SILVER',
       tier: 'STUDIO',
-      price: 'GHc1800',
+      price: 'GHc2050',
       originalPrice: null,
       outfit: '1-2 Outfits',
       photos: '8 edited Photos',
@@ -65,11 +65,11 @@ export default function Ratecard() {
     {
       name: 'GOLDEN',
       tier: 'STUDIO',
-      price: 'GHc2500',
+      price: 'GHc3200',
       originalPrice: null,
       outfit: '1-3 Outfits',
       photos: '15 edited Photos',
-      duration: '60-100 minutes',
+      duration: '60 to 100 minutes',
       color: 'from-yellow-400 via-yellow-500 to-amber-500',
       bgGradient: 'from-yellow-50/50 via-amber-50/30 to-yellow-50/50',
       borderGradient: 'from-yellow-400/50 via-amber-400/50 to-yellow-400/50',
@@ -86,7 +86,7 @@ export default function Ratecard() {
       price: 'GHc1500',
       originalPrice: null,
       outfit: '1 Outfit',
-      photos: '7 edited Photos',
+      photos: '5 edited Photos',
       duration: '40 minutes',
       color: 'from-amber-500 via-amber-600 to-orange-600',
       bgGradient: 'from-amber-50/50 via-orange-50/30 to-amber-50/50',
@@ -98,9 +98,9 @@ export default function Ratecard() {
     {
       name: 'SILVER',
       tier: 'OUTDOOR',
-      price: 'GHc2000',
+      price: 'GHc2500',
       originalPrice: null,
-      outfit: '1-2 Outfits',
+      outfit: '1-2 Outfit',
       photos: '8 edited Photos',
       duration: '70 minutes',
       color: 'from-slate-400 via-slate-500 to-slate-600',
@@ -115,9 +115,9 @@ export default function Ratecard() {
       tier: 'OUTDOOR',
       price: 'GHc3500',
       originalPrice: null,
-      outfit: '1-3 Outfits',
+      outfit: '1-3 Outfit Changed',
       photos: '15 edited Photos',
-      duration: '60-100 minutes',
+      duration: '60 to 100 minutes',
       color: 'from-yellow-400 via-yellow-500 to-amber-500',
       bgGradient: 'from-yellow-50/50 via-amber-50/30 to-yellow-50/50',
       borderGradient: 'from-yellow-400/50 via-amber-400/50 to-yellow-400/50',
@@ -189,7 +189,7 @@ export default function Ratecard() {
           'Bride and Groom Dress up',
           'Traditional or White wedding',
           'Exclusive and Reception images',
-          '6 working Hours',
+          '6 Working Hours',
           '200 Images (20 Retouched) + All unprocessed jpegs (min. 600 images)',
           'Photobook (250 maximum)',
           '2 Photo frames (A3)',
@@ -203,7 +203,7 @@ export default function Ratecard() {
           'Drone Coverage',
           'Bride and Groom dress up',
           'Video Trailer (60 sec min)',
-          'Traditional or white wedding and Reception Coverage',
+          '(Traditional or white wedding) Reception Coverage',
           'Full Length Video (Approximately 1hr 30 mins)',
           'All softcopies on Pendrive',
           '6 Working Hours',
@@ -843,10 +843,10 @@ export default function Ratecard() {
               <ScrollAnimation animationType="fade-up" delay={400}>
                 <div className="mt-12 max-w-2xl mx-auto text-center p-6 bg-purple-50/50 dark:bg-purple-950/20 rounded-2xl border border-purple-200/50 dark:border-purple-800/50">
                   <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-                    <strong>Note:</strong> All packages cover one day's service. For 2-day events (Engagement or Wedding on separate days), add 35% to chosen package (45% for Basic package).
+                    <strong>Note:</strong> All packages cover one day's service. However, Client pays additional 35% only to a chosen package if the ceremony is a 2 day event (Thus, Engagement or Wedding on separate days). For Basic package, add 45% for 2-day events.
                   </p>
                   <p className="text-sm text-gray-700 dark:text-gray-300">
-                    Accommodation and Transportation are catered for by the Client.
+                    However, accommodation and Transportation is catered for by the Client.
                   </p>
                 </div>
               </ScrollAnimation>

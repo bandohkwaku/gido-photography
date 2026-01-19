@@ -83,6 +83,13 @@ const slides: Slide[] = [
     subtitle: 'Excellence Delivered',
     description: 'Comprehensive photography services tailored to your unique needs and vision',
   },
+  {
+    id: 11,
+    image: '/images/hero/GIDO9016.JPG',
+    title: 'Creative Excellence',
+    subtitle: 'Artistic Photography',
+    description: 'Transform your vision into stunning visual art with our creative photography expertise',
+  },
 ];
 
 export default function HeroSlider() {

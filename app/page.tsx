@@ -8,11 +8,11 @@ import FloatingElements from './components/FloatingElements';
 import Footer from './components/Footer';
 import HeroSlider from './components/HeroSlider';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+  const router = useRouter();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
 
   // Array of all featured images in order
@@ -20,15 +20,18 @@ export default function Home() {
     '/images/featured/GIDO8549-1-min.jpg',
     '/images/featured/IMG_1736-min.JPG',
     '/images/featured/GIDO_7785-min.JPG',
+    '/images/featured/GIDO00281-min.JPG',
+    '/images/featured/GIDO0231-1.JPG',
+    '/images/featured/GIDO8960.JPG',
+    '/images/featured/_IDO0978-min.jpg',
     '/images/featured/IMG_0089-min.JPG',
-    '/images/featured/IMG_5891-min.jpg',
     '/images/featured/IMG_3150-min.JPG',
     '/images/featured/IMG_4149-min.JPG',
     '/images/featured/IMG_4244-min.JPG',
     '/images/featured/IMG_4306-min.JPG',
     '/images/featured/IMG_4307-min.JPG',
-    '/images/featured/IMG_5336-min.JPG',
-    '/images/featured/GIDO00281-min.JPG',
+    '/images/featured/IMG_5891-min.jpg',
+    '/images/featured/IMG_7390-min.JPG',
   ];
 
   // Mouse movement effect
@@ -48,44 +51,6 @@ export default function Home() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // Navigation functions
-  const goToPrevious = (e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    if (selectedImageIndex !== null && featuredImages.length > 0) {
-      const newIndex = selectedImageIndex === 0 ? featuredImages.length - 1 : selectedImageIndex - 1;
-      setSelectedImageIndex(newIndex);
-      setSelectedImage(featuredImages[newIndex]);
-    }
-  };
-
-  const goToNext = (e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    if (selectedImageIndex !== null && featuredImages.length > 0) {
-      const newIndex = selectedImageIndex === featuredImages.length - 1 ? 0 : selectedImageIndex + 1;
-      setSelectedImageIndex(newIndex);
-      setSelectedImage(featuredImages[newIndex]);
-    }
-  };
-
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (selectedImage !== null) {
-        if (e.key === 'ArrowLeft') {
-          goToPrevious();
-        } else if (e.key === 'ArrowRight') {
-          goToNext();
-        } else if (e.key === 'Escape') {
-          setSelectedImage(null);
-          setSelectedImageIndex(null);
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [selectedImage, selectedImageIndex, featuredImages]);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -201,8 +166,12 @@ export default function Home() {
               >
                 <div 
                   onClick={() => {
-                    setSelectedImage(image);
-                    setSelectedImageIndex(index);
+                    const params = new URLSearchParams({
+                      images: encodeURIComponent(JSON.stringify(featuredImages)),
+                      index: index.toString(),
+                      title: `Featured ${index + 1}`,
+                    });
+                    router.push(`/preview?${params.toString()}`);
                   }}
                   className="group relative overflow-hidden rounded-2xl cursor-pointer transform transition-all duration-700 hover:scale-[1.02] hover:shadow-2xl break-inside-avoid mb-4 md:mb-6"
                 >
@@ -397,79 +366,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Lightbox Modal */}
-      {selectedImage && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
-          onClick={() => {
-            setSelectedImage(null);
-            setSelectedImageIndex(null);
-          }}
-        >
-          <div className="relative max-w-5xl max-h-full w-full flex items-center justify-center">
-            {/* Previous button */}
-            {featuredImages.length > 1 && (
-              <button
-                onClick={goToPrevious}
-                className="absolute left-4 md:left-8 z-10 text-white hover:text-gray-300 transition-colors bg-black/50 hover:bg-black/70 rounded-full p-3 backdrop-blur-sm"
-                aria-label="Previous image"
-              >
-                <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-            )}
-
-            <div className="relative max-w-full max-h-[90vh] flex items-center justify-center">
-              <Image
-                src={selectedImage}
-                alt="Full view"
-                width={1200}
-                height={1200}
-                sizes="90vw"
-                className="object-contain max-h-[90vh] w-auto"
-                priority
-                onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-
-            {/* Next button */}
-            {featuredImages.length > 1 && (
-              <button
-                onClick={goToNext}
-                className="absolute right-4 md:right-8 z-10 text-white hover:text-gray-300 transition-colors bg-black/50 hover:bg-black/70 rounded-full p-3 backdrop-blur-sm"
-                aria-label="Next image"
-              >
-                <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            )}
-
-            {/* Close button */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedImage(null);
-                setSelectedImageIndex(null);
-              }}
-              className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors bg-black/50 hover:bg-black/70 rounded-full p-3 backdrop-blur-sm z-10"
-              aria-label="Close"
-            >
-              <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-
-            {/* Image counter */}
-            {featuredImages.length > 1 && selectedImageIndex !== null && (
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm text-sm md:text-base">
-                {selectedImageIndex + 1} / {featuredImages.length}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
 
       {/* Scroll to Top Button */}
       {showScrollToTop && (

@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import Navigation from '../components/Navigation';
 import ScrollAnimation from '../components/ScrollAnimation';
 import FloatingElements from '../components/FloatingElements';
 import Footer from '../components/Footer';
 
 export default function AboutUs() {
+  const router = useRouter();
   const [activeFilter, setActiveFilter] = useState('Wedding');
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
   // Image arrays for each filter
   const imageArrays = {
@@ -133,49 +133,13 @@ export default function AboutUs() {
       '/images/studio/IMG_5566-min.JPG',
       '/images/studio/IMG_6600-min.JPG',
       '/images/studio/IMG_6840-min.JPG',
+      '/images/studio/IMG_7552.JPG',
+      '/images/studio/IMG_7589.JPG',
       '/images/studio/_IDO0705-min.JPG',
     ],
   };
 
   const currentImages = imageArrays[activeFilter as keyof typeof imageArrays] || [];
-
-  // Navigation functions
-  const goToPrevious = (e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    if (selectedImageIndex !== null && currentImages.length > 0) {
-      const newIndex = selectedImageIndex === 0 ? currentImages.length - 1 : selectedImageIndex - 1;
-      setSelectedImageIndex(newIndex);
-      setSelectedImage(currentImages[newIndex]);
-    }
-  };
-
-  const goToNext = (e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    if (selectedImageIndex !== null && currentImages.length > 0) {
-      const newIndex = selectedImageIndex === currentImages.length - 1 ? 0 : selectedImageIndex + 1;
-      setSelectedImageIndex(newIndex);
-      setSelectedImage(currentImages[newIndex]);
-    }
-  };
-
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (selectedImage !== null) {
-        if (e.key === 'ArrowLeft') {
-          goToPrevious();
-        } else if (e.key === 'ArrowRight') {
-          goToNext();
-        } else if (e.key === 'Escape') {
-          setSelectedImage(null);
-          setSelectedImageIndex(null);
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [selectedImage, selectedImageIndex, currentImages]);
 
   return (
     <div className="min-h-screen bg-white dark:bg-black relative overflow-hidden">
@@ -285,8 +249,12 @@ export default function AboutUs() {
                     key={index}
                     className="relative aspect-square overflow-hidden group cursor-pointer"
                     onClick={() => {
-                      setSelectedImage(imageSrc);
-                      setSelectedImageIndex(index);
+                      const params = new URLSearchParams({
+                        images: encodeURIComponent(JSON.stringify(currentImages)),
+                        index: index.toString(),
+                        title: `${activeFilter} ${index + 1}`,
+                      });
+                      router.push(`/preview?${params.toString()}`);
                     }}
                   >
                     <Image
@@ -366,79 +334,6 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* Lightbox Modal */}
-      {selectedImage && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4"
-          onClick={() => {
-            setSelectedImage(null);
-            setSelectedImageIndex(null);
-          }}
-        >
-          <div className="relative max-w-5xl max-h-full w-full flex items-center justify-center">
-            {/* Previous button */}
-            {currentImages.length > 1 && (
-              <button
-                onClick={goToPrevious}
-                className="absolute left-4 md:left-8 z-10 text-white hover:text-gray-300 transition-colors bg-black/50 hover:bg-black/70 rounded-full p-3 backdrop-blur-sm"
-                aria-label="Previous image"
-              >
-                <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-            )}
-
-            <div className="relative max-w-full max-h-[90vh] flex items-center justify-center">
-              <Image
-                src={selectedImage}
-                alt="Full view"
-                width={1200}
-                height={1200}
-                sizes="90vw"
-                className="object-contain max-h-[90vh] w-auto"
-                priority
-                onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-
-            {/* Next button */}
-            {currentImages.length > 1 && (
-              <button
-                onClick={goToNext}
-                className="absolute right-4 md:right-8 z-10 text-white hover:text-gray-300 transition-colors bg-black/50 hover:bg-black/70 rounded-full p-3 backdrop-blur-sm"
-                aria-label="Next image"
-              >
-                <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            )}
-
-            {/* Close button */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedImage(null);
-                setSelectedImageIndex(null);
-              }}
-              className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors bg-black/50 hover:bg-black/70 rounded-full p-3 backdrop-blur-sm z-10"
-              aria-label="Close"
-            >
-              <svg className="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-
-            {/* Image counter */}
-            {currentImages.length > 1 && selectedImageIndex !== null && (
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm text-sm md:text-base">
-                {selectedImageIndex + 1} / {currentImages.length}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
 
       <Footer />
     </div>
